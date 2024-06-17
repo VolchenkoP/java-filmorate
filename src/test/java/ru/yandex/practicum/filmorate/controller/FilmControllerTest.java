@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.filmservice.FilmServiceImpl;
+import ru.yandex.practicum.filmorate.storage.filmstorage.FilmStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,7 +19,9 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FilmControllerTest {
-    FilmController controller = new FilmController();
+    private final FilmStorage filmStorage = new FilmStorage();
+    private final FilmServiceImpl filmService = new FilmServiceImpl(filmStorage);
+    private final FilmController controller = new FilmController(filmService);
     private Validator validator;
 
     @BeforeEach
@@ -60,25 +64,27 @@ class FilmControllerTest {
 
     @Test
     void createFilmWithDurationMoreThen200CharAtShouldUnSuccessfullyCreateFilmTest() {
-        Film film = defaultFilm();
+        final Film film = defaultFilm();
         film.setDescription("abc".repeat(200));
         final Set<ConstraintViolation<Film>> violationSet = validator.validate(film);
+
         assertFalse(violationSet.isEmpty());
     }
 
     @ParameterizedTest
     @ValueSource(longs = {0, -1})
     void createFilmWithNegativeDurationShouldUnsuccessfullyCreateFilmTest(Long duration) {
-        Film film = defaultFilm();
+        final Film film = defaultFilm();
         film.setDuration(duration);
         final Set<ConstraintViolation<Film>> violationSet = validator.validate(film);
+
         assertFalse(violationSet.isEmpty());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
     void createFilmWithEmptyNameShouldUnsuccessfullyCreateFilmTest(String name) {
-        Film film = defaultFilm();
+        final Film film = defaultFilm();
         film.setName(name);
         final Set<ConstraintViolation<Film>> violationSet = validator.validate(film);
         assertFalse(violationSet.isEmpty());

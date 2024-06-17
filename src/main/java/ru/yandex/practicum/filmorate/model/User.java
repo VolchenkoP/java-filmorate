@@ -3,11 +3,10 @@ package ru.yandex.practicum.filmorate.model;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Data;
-import ru.yandex.practicum.filmorate.controller.validators.UserValidator.Login;
 
 import java.time.LocalDate;
 
@@ -15,15 +14,13 @@ import java.time.LocalDate;
 @Data
 public class User {
     private Long id;
-    @NotNull
     @NotBlank
     @Email
     private String email;
-    @NotNull
     @NotBlank
-    @Login
+    @Pattern(regexp = "^\\S*$", message = "Логин не может содержать пробелы")
     private String login;
     private String name;
-    @Past
+    @PastOrPresent
     private LocalDate birthday;
 }

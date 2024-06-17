@@ -3,57 +3,33 @@ package ru.yandex.practicum.filmorate.controller;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.filmservice.FilmServiceImpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-    private final Map<Long, Film> films = new HashMap<>();
+    private final FilmServiceImpl filmService;
+
+    public FilmController(FilmServiceImpl filmService) {
+        this.filmService = filmService;
+    }
 
     @GetMapping
     public List<Film> findAll() {
-        log.info("Получение списка всех фильмов");
-        return new ArrayList<>(films.values());
+        return filmService.findAllFilms();
     }
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
-        log.info("Добавление нового фильма");
-        film.setId(getNextId());
-        films.put(film.getId(), film);
-        return film;
+        return filmService.createFilm(film);
     }
 
     @PutMapping
     public Film update(@Valid @RequestBody Film newFilm) {
-        log.info("Обновление фильма с ID {}", newFilm.getId());
-        try {
-            if (films.containsKey(newFilm.getId())) {
-                films.put(newFilm.getId(), newFilm);
-                return newFilm;
-            } else {
-                throw new NotFoundException("Фильм с ID: " + newFilm.getId() + " не найден");
-            }
-        } catch (ValidationException | NotFoundException e) {
-            log.error("Ошибка при обновлении фильма", e);
-            throw e;
-        }
-    }
-
-    private long getNextId() {
-        long currentId = films.keySet()
-                .stream()
-                .mapToLong(id -> id)
-                .max()
-                .orElse(0);
-        return ++currentId;
+        return filmService.updateFilm(newFilm);
     }
 }

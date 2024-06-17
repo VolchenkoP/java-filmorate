@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.userservice.UserServiceImpl;
+import ru.yandex.practicum.filmorate.storage.userstorage.UserStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,8 +19,9 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
-
-    UserController userController = new UserController();
+    private final UserStorage userStorage = new UserStorage();
+    private final UserServiceImpl userService = new UserServiceImpl(userStorage);
+    private final UserController userController = new UserController(userService);
     private Validator validator;
 
     @BeforeEach
@@ -64,7 +67,7 @@ class UserControllerTest {
 
     @Test
     void createUserWithReplaceNameToLoginShouldSuccessfullyCreateUserTest() {
-        User user = defaultUser();
+        final User user = defaultUser();
         user.setName(null);
         userController.create(user);
 
@@ -73,7 +76,7 @@ class UserControllerTest {
 
     @Test
     void createUserWithFutureBirthdayShouldUnsuccessfullyCreateUser() {
-        User user = defaultUser();
+        final User user = defaultUser();
         user.setBirthday(LocalDate.of(8888, 12, 12));
 
         final Set<ConstraintViolation<User>> violationSet = validator.validate(user);
@@ -84,7 +87,7 @@ class UserControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"@test.ru", "test"})
     void createUserWithWrongEmailShouldUnSuccessfullyCreateUser(String email) {
-        User user = defaultUser();
+        final User user = defaultUser();
         user.setEmail(email);
 
         final Set<ConstraintViolation<User>> violationSet = validator.validate(user);
@@ -95,7 +98,7 @@ class UserControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "log in"})
     void createUserWithWrongLoginShouldUnSuccessfullyCreateUser(String login) {
-        User user = defaultUser();
+        final User user = defaultUser();
         user.setEmail(login);
 
         final Set<ConstraintViolation<User>> violationSet = validator.validate(user);
