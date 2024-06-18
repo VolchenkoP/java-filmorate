@@ -17,17 +17,15 @@ public class UserStorage {
     private final Map<Long, User> users = new HashMap<>();
 
     public List<User> findAll() {
-        log.info("Получение списка всех юзеров");
         return new ArrayList<>(users.values());
     }
 
     public User create(User user) {
         try {
-            log.info("Создание нового user");
             userValidation(user);
             user.setId(getNextId());
             users.put(user.getId(), user);
-            log.info("User создан с Id: {}", user.getId());
+            log.debug("User создан с Id: {}", user.getId());
             return user;
         } catch (ValidationException e) {
             log.error("Ошибка при создании юзера", e);

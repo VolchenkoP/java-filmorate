@@ -17,22 +17,21 @@ public class FilmStorage {
     private final Map<Long, Film> films = new HashMap<>();
 
     public List<Film> findAll() {
-        log.info("Получение списка всех фильмов");
         return new ArrayList<>(films.values());
     }
 
     public Film create(Film film) {
-        log.info("Добавление нового фильма");
         film.setId(getNextId());
         films.put(film.getId(), film);
+        log.debug("Фильм с ID: {} успешно добавлен", film.getId());
         return film;
     }
 
     public Film update(Film newFilm) {
-        log.info("Обновление фильма с ID {}", newFilm.getId());
         try {
             if (films.containsKey(newFilm.getId())) {
                 films.put(newFilm.getId(), newFilm);
+                log.debug("Фильм с ID: {} успешно обновлен", newFilm.getId());
                 return newFilm;
             } else {
                 throw new NotFoundException("Фильм с ID: " + newFilm.getId() + " не найден");
