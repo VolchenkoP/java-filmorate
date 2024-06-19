@@ -2,10 +2,10 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.filmservice.FilmService;
-import ru.yandex.practicum.filmorate.service.filmservice.FilmServiceImpl;
 
 import java.util.List;
 
@@ -15,8 +15,9 @@ import java.util.List;
 public class FilmController {
     private final FilmService filmService;
 
-    public FilmController(FilmServiceImpl filmServiceImpl) {
-        this.filmService = filmServiceImpl;
+    @Autowired
+    public FilmController(FilmService filmService) {
+        this.filmService = filmService;
     }
 
     @GetMapping
