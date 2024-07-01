@@ -11,4 +11,10 @@ public interface FilmService {
     Film updateFilm(Film film) throws ValidationException;
 
     List<Film> findAllFilms();
+
+    List<Film> getPopularFilms(int count);
+
+    void addLike(long id, long userId);
+
+    void deleteLike(long id, long userId);
 }
