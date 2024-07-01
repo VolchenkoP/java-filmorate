@@ -33,6 +33,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             log.info("Фильм с ID: {} успешно обновлен", newFilm.getId());
             return newFilm;
         } else {
+            log.error("Ошибка при обновлении фильма с id: {}", newFilm.getId());
             throw new NotFoundException("Фильм с ID: " + newFilm.getId() + " не найден");
         }
     }
@@ -43,6 +44,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             log.info("Фильм с ID: {} успешно найден", id);
             return films.get(id);
         } else {
+            log.error("Ошибка при получении фильма с id: {}", id);
             throw new NotFoundException("Film с id: " + id + " не найден");
         }
     }

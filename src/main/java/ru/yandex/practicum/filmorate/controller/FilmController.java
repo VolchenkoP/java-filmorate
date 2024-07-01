@@ -40,17 +40,4 @@ public class FilmController {
         return filmService.updateFilm(newFilm);
     }
 
-    @PutMapping("{id}/like/{userId}")
-    public void addLike(@PathVariable Long id,
-                        @PathVariable Long userId) {
-        log.info("Добавление лайка фильму с id {}", id);
-        filmService.addLike(id, userId);
-    }
-
-    @DeleteMapping("{id}/like/{userId}")
-    public void deleteLike(@PathVariable Long id,
-                           @PathVariable Long userId) {
-        log.info("Удаление лайка у фильма с id {}", id);
-        filmService.deleteLike(id, userId);
-    }
 }

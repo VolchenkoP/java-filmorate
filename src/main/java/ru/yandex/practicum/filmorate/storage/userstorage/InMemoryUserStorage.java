@@ -34,16 +34,13 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User update(User newUser) {
-        try {
-            if (users.containsKey(newUser.getId())) {
-                users.put(newUser.getId(), newUser);
-                log.info("Юзер с ID: {} успешно обновлен", newUser.getId());
-                return newUser;
-            }
+        if (users.containsKey(newUser.getId())) {
+            users.put(newUser.getId(), newUser);
+            log.info("Юзер с ID: {} успешно обновлен", newUser.getId());
+            return newUser;
+        } else {
+            log.error("Ошибка при обновлении юзера");
             throw new NotFoundException("Юзер с ID: " + newUser.getId() + " не найден");
-        } catch (ValidationException | NotFoundException e) {
-            log.error("Ошибка при обновлении юзера", e);
-            throw e;
         }
     }
 
@@ -52,6 +49,7 @@ public class InMemoryUserStorage implements UserStorage {
         if (users.containsKey(id)) {
             return users.get(id);
         } else {
+            log.error("Ошибка при получении юзера с id: {}", id);
             throw new NotFoundException("User с id: " + id + " не найден");
         }
     }

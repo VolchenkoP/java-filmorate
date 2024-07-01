@@ -12,11 +12,4 @@ public interface UserService {
 
     List<User> findAllUsers();
 
-    List<User> findAllFriends(long id);
-
-    List<User> getAllCommonFriends(long id, long otherId);
-
-    void addToFriends(long id, long friendId);
-
-    void deleteFromFriends(long id, long friendId);
 }

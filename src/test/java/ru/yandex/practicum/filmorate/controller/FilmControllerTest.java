@@ -12,8 +12,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.filmservice.FilmServiceImpl;
 import ru.yandex.practicum.filmorate.storage.filmstorage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.filmstorage.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.userstorage.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.storage.userstorage.UserStorage;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -24,8 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FilmControllerTest {
     private final FilmStorage filmStorage = new InMemoryFilmStorage();
-    private final UserStorage userStorage = new InMemoryUserStorage();
-    private final FilmServiceImpl filmService = new FilmServiceImpl(filmStorage, userStorage);
+    private final FilmServiceImpl filmService = new FilmServiceImpl(filmStorage);
     private final FilmController controller = new FilmController(filmService);
     private Validator validator;
 
