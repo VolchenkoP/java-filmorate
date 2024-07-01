@@ -11,4 +11,5 @@ public interface UserService {
     User updateUser(User user) throws ValidationException;
 
     List<User> findAllUsers();
+
 }

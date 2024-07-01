@@ -10,16 +10,18 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.userservice.UserServiceImpl;
+import ru.yandex.practicum.filmorate.storage.userstorage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.userstorage.UserStorage;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
-    private final UserStorage userStorage = new UserStorage();
+    private final UserStorage userStorage = new InMemoryUserStorage();
     private final UserServiceImpl userService = new UserServiceImpl(userStorage);
     private final UserController userController = new UserController(userService);
     private Validator validator;
@@ -33,6 +35,7 @@ class UserControllerTest {
     User defaultUser() {
         User user = User.builder()
                 .id(null)
+                .friends(new HashSet<>())
                 .name("defaultUser")
                 .email("default@ya.ru")
                 .login("defaultLogin")

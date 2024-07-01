@@ -9,11 +9,13 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Builder
 @Data
 public class User {
     private Long id;
+    private Set<Long> friends;
     @NotBlank
     @Email
     private String email;
