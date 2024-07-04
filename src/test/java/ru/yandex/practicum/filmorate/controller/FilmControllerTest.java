@@ -11,15 +11,17 @@ import org.junit.jupiter.params.provider.ValueSource;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.filmservice.FilmServiceImpl;
 import ru.yandex.practicum.filmorate.storage.filmstorage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.filmstorage.InMemoryFilmStorage;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class FilmControllerTest {
-    private final FilmStorage filmStorage = new FilmStorage();
+    private final FilmStorage filmStorage = new InMemoryFilmStorage();
     private final FilmServiceImpl filmService = new FilmServiceImpl(filmStorage);
     private final FilmController controller = new FilmController(filmService);
     private Validator validator;
@@ -33,6 +35,7 @@ class FilmControllerTest {
     Film defaultFilm() {
         Film film = Film.builder()
                 .id(null)
+                .likes(new HashSet<>())
                 .name("Default")
                 .description("Desc")
                 .releaseDate(LocalDate.of(2000, 1, 1))

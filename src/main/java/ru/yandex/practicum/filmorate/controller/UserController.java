@@ -30,7 +30,7 @@ public class UserController {
 
     @PutMapping
     public User update(@Valid @RequestBody User newUser) {
-        log.info("Обновление user с ID {}", newUser.getId());
+        log.info("Обновление user с Id {}", newUser.getId());
         return userService.updateUser(newUser);
     }
 

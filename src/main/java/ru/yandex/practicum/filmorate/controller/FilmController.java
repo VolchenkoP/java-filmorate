@@ -22,6 +22,12 @@ public class FilmController {
         return filmService.findAllFilms();
     }
 
+    @GetMapping("/popular")
+    public List<Film> getPopularFilms(@RequestParam(defaultValue = "10") int count) {
+        log.info("Получение списка {} популярных фильмов", count);
+        return filmService.getPopularFilms(count);
+    }
+
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
         log.info("Добавление нового фильма");
@@ -33,4 +39,5 @@ public class FilmController {
         log.info("Обновление фильма с ID {}", newFilm.getId());
         return filmService.updateFilm(newFilm);
     }
+
 }
