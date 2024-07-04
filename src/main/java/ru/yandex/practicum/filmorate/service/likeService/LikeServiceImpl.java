@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.service.likeService;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,15 +13,10 @@ import java.util.Set;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class LikeServiceImpl implements LikeService {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
-
-    @Autowired
-    public LikeServiceImpl(FilmStorage filmStorage, UserStorage userStorage) {
-        this.filmStorage = filmStorage;
-        this.userStorage = userStorage;
-    }
 
     @Override
     public void addLike(long id, long userId) {

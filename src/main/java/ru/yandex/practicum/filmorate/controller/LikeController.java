@@ -8,18 +8,18 @@ import ru.yandex.practicum.filmorate.service.likeService.LikeService;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/films")
+@RequestMapping("/films/{id}/like/{userId}")
 public class LikeController {
     private final LikeService likeService;
 
-    @PutMapping("{id}/like/{userId}")
+    @PutMapping
     public void addLike(@PathVariable Long id,
                         @PathVariable Long userId) {
         log.info("Добавление лайка фильму с id {}", id);
         likeService.addLike(id, userId);
     }
 
-    @DeleteMapping("{id}/like/{userId}")
+    @DeleteMapping
     public void deleteLike(@PathVariable Long id,
                            @PathVariable Long userId) {
         log.info("Удаление лайка у фильма с id {}", id);

@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.service.userservice;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,13 +13,9 @@ import java.util.List;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserStorage storage;
-
-    @Autowired
-    public UserServiceImpl(UserStorage storage) {
-        this.storage = storage;
-    }
 
     @Override
     public User createUser(User user) throws ValidationException {
