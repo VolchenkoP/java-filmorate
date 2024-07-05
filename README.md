@@ -50,7 +50,7 @@ erDiagram
     Enum rating
     }
     LIKES {
-    Long film_id
+    Long film_id PK, FK
     Long user_id
     }
 ```
