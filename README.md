@@ -36,7 +36,7 @@ erDiagram
     Long duration
     Long rating_id
     }
-    FILM_GENRE || --o{ GENRES has
+    FILM_GENRE || --o{ GENRES : has
     FILM_GENRE {
     Long film_id PK, FK
     Long genre_id FK
