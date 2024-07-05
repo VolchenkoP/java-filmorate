@@ -6,7 +6,7 @@ Template repository for Filmorate project.
 ---
 ```mermaid
 erDiagram
-    USER || --o{ USER_FRIENDS : has
+    USER || --o{ USER_FRIENDS : has, make
     USER || --o{ LIKES : make
     USER {
     Long user_id PK, FK
