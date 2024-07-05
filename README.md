@@ -51,6 +51,6 @@ erDiagram
     }
     LIKES {
     Long film_id
-    Long users_id: [user_id, user_id, ...]
+    Long user_id
     }
 ```
