@@ -60,7 +60,7 @@ erDiagram
  FROM film
  WHERE film_id IN (SELECT film_id
                    FROM likes
-                   GRUOP BY film_id
+                   GROUP BY film_id
                    ORDER BY COUNT(user_id) DESC
                    LIMIT 10);
 ```
