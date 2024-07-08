@@ -41,11 +41,11 @@ erDiagram
     }
     GENRES {
     Long genre_id PK, FK
-    Enum genre
+    String genre_name
     }
     RATING {
     Long rating_id PK, FK
-    Enum rating
+    String rating_name
     }
     LIKES {
     Long film_id PK, FK
