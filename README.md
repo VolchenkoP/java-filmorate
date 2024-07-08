@@ -16,14 +16,9 @@ erDiagram
     LocalDate birthday
     Set friends
     }
-    USER_FRIENDS || --o{ STATUS_FRIENDSHIP : has
     USER_FRIENDS {
     Long user_id PK, FK
     Long friend_id FK
-    Long status_id FK
-    }
-    STATUS_FRIENDSHIP {
-    Long status_id PK, FK
     Enum status
     }
     FILM || --o{ FILM_GENRE : has
