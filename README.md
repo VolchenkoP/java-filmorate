@@ -19,7 +19,7 @@ erDiagram
     USER_FRIENDS {
     Long user_id PK, FK
     Long friend_id FK
-    Enum status
+    String status
     }
     FILM || --o{ FILM_GENRE : has
     FILM || --o{ LIKES : has
@@ -32,7 +32,7 @@ erDiagram
     Long duration
     Set likes
     HashSet genres
-    Rating rating
+    Long rating_id
     }
     FILM_GENRE || --o{ GENRES : has
     FILM_GENRE {
