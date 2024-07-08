@@ -14,6 +14,7 @@ erDiagram
     String email
     String login
     LocalDate birthday
+    Set<Long> friends
     }
     USER_FRIENDS || --o{ STATUS_FRIENDSHIP : has
     USER_FRIENDS {
