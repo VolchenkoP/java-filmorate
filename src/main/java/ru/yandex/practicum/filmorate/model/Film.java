@@ -8,6 +8,7 @@ import lombok.Data;
 import ru.yandex.practicum.filmorate.controller.validators.FilmValidator.ReleaseDate;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -26,5 +27,7 @@ public class Film {
     private LocalDate releaseDate;
     @Positive
     private Long duration;
+    private HashSet<Genre> genres;
+    private Rating rating;
 
 }

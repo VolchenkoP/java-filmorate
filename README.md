@@ -30,7 +30,9 @@ erDiagram
     String description
     LocalDate releaseDate
     Long duration
-    Long rating_id
+    Set likes
+    HashSet genres
+    Rating rating
     }
     FILM_GENRE || --o{ GENRES : has
     FILM_GENRE {
