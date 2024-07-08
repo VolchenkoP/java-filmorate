@@ -55,6 +55,7 @@ erDiagram
 ---
 ##Examples of SQL query:<br>
  - Ex.1 (top 10 films by likes):<br>
+```sql
  SELECT name<br>
  FROM film<br>
  WHERE film_id IN (SELECT film_id<br>
@@ -62,13 +63,16 @@ erDiagram
                    GRUOP BY film_id<br>
                    ORDER BY COUNT(user_id) DESC<br>
                    LIMIT 10);
+```
 
  - Ex.2 (Take id and login friends by user with id = 1):<br>
+```sql
  SELECT u.user_id,<br>
         u.login<br>
  FROM user AS u<br>
  WHERE u.user_id IN (SELECT uf.friend_id<br>
                      FROM user_friends AS uf<br>
                      WHERE uf.user_id = 1);
+```
        
 
