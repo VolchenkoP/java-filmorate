@@ -6,7 +6,7 @@ Template repository for Filmorate project.
 ---
 ```mermaid
 erDiagram
-    USER || --o{ USER_FRIENDS : "has friendship, make friendship"
+    USER || --o{ FRIENDSHIP : "has friendship, make friendship"
     USER || --o{ LIKES : "make likes"
     USER {
     user_id integer PK
@@ -15,7 +15,7 @@ erDiagram
     user_name varchar(202)
     user_birthday timestamp
     }
-    Friendship {
+    FRIENDSHIP {
     friendship_id integer PK    
     user_id integer FK
     friend_id integer FK
