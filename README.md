@@ -6,54 +6,53 @@ Template repository for Filmorate project.
 ---
 ```mermaid
 erDiagram
-    USER || --o{ USER_FRIENDS : "has, make"
-    USER || --o{ LIKES : make
+    USER || --o{ USER_FRIENDS : "has friendship, make friendship"
+    USER || --o{ LIKES : "make likes"
     USER {
-    Long user_id PK, FK
-    String name
-    String email
-    String login
-    LocalDate birthday
-    Set friends
+    user_id integer PK
+    user_email varchar(202)
+    user_login varchar(55)
+    user_name varchar(202)
+    user_birthday timestamp
     }
-    USER_FRIENDS {
-    Long user_id PK, FK
-    Long friend_id FK
-    String status
+    Friendship {
+    friendship_id integer PK    
+    user_id integer FK
+    friend_id integer FK
+    friendship_status varchar(50)
     }
-    FILM || --o{ FILM_GENRE : has
-    FILM || --o{ LIKES : has
-    FILM || --o{ RATING : has
+    FILM || --o{ FILM_GENRE : "has genre"
+    FILM || --o{ LIKES : "has likes"
+    FILM || --o{ RATING : "has rating"
     FILM {
-    Long film_id PK, FK
-    String name
-    String description
-    LocalDate releaseDate
-    Long duration
-    Set likes
-    HashSet genres
-    Long rating_id
+    film_id integer PK
+    film_name varchar(202)
+    film_description varchar(500)
+    film_releaseDate timestamp
+    film_duration integer
+    rating_id integer
     }
-    FILM_GENRE || --o{ GENRES : has
+    FILM_GENRE || --o{ GENRES : "has genres"
     FILM_GENRE {
-    Long film_id PK, FK
-    Long genre_id FK
+    film_genre_id integer PK
+    film_id integer FK
+    genre_id integer
     }
     GENRES {
-    Long genre_id PK, FK
-    String genre_name
+    genre_id integer FK
+    genre_name varchar(202)
     }
     RATING {
-    Long rating_id PK, FK
-    String rating_name
+    rating_id integer FK
+    rating_name varchar(202)
     }
     LIKES {
-    Long film_id PK, FK
-    Long user_id
+    film_id integer FK
+    user_id integer FK
     }
 ```
 ---
-##Examples of SQL query:<br>
+## Examples of SQL query:<br>
  - Ex.1 (top 10 films by likes):<br>
 ```sql
  SELECT name
