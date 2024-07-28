@@ -24,7 +24,7 @@ erDiagram
     }
     FILM || --o{ FILM_GENRE : "has genre"
     FILM || --o{ LIKES : "has likes"
-    FILM || --o{ RATING : "has mpa"
+    FILM || --o{ RATINGMPA : "has mpa"
     FILM {
     film_id integer PK
     name varchar(200)
@@ -59,11 +59,11 @@ erDiagram
 
 ## Examples of SQL query:<br>
 
-- Ex.1 (top 10 films by likes):<br>
+- Ex.1 (Take id and name of genre from film with id 2):<br>
 
 ```sql
  SELECT g.genre_id, 
-        name 
+        g.name 
  FROM Genre AS g
  INNER JOIN Film_genre AS fg on g.genre_id = fg.genre_id
  WHERE fg.film_id = 2;
