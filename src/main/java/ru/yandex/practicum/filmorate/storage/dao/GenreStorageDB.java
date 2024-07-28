@@ -11,7 +11,8 @@ import ru.yandex.practicum.filmorate.storage.GenreStorage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Component
 @AllArgsConstructor
@@ -27,7 +28,7 @@ public class GenreStorageDB implements GenreStorage {
     }
 
     @Override
-    public boolean addFilmGenres(int filmId, List<Genre> genres) {
+    public boolean addFilmGenres(int filmId, Set<Genre> genres) {
         for (Genre genre : genres) {
             String setNewGenres = "insert into Film_genre (film_id, genre_id) VALUES (?, ?) ON CONFLICT DO NOTHING";
             jdbcTemplate.update(setNewGenres, filmId, genre.getId());
@@ -36,16 +37,16 @@ public class GenreStorageDB implements GenreStorage {
     }
 
     @Override
-    public List<Genre> getGenresByFilmId(int filmId) {
+    public Set<Genre> getGenresByFilmId(int filmId) {
         String sqlGenre = "select g.genre_id, name from Genre as g"
                 + " INNER JOIN Film_genre as fg on g.genre_id = fg.genre_id where fg.film_id = ?";
-        return jdbcTemplate.query(sqlGenre, this::makeGenre, filmId);
+        return new LinkedHashSet<>(jdbcTemplate.query(sqlGenre, this::makeGenre, filmId));
     }
 
     @Override
-    public List<Genre> getAllGenres() {
+    public Set<Genre> getAllGenres() {
         String sqlGenre = "select genre_id, name from Genre ORDER BY genre_id";
-        return jdbcTemplate.query(sqlGenre, this::makeGenre);
+        return new LinkedHashSet<>(jdbcTemplate.query(sqlGenre, this::makeGenre));
     }
 
     @Override

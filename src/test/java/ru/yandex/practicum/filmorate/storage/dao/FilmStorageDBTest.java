@@ -11,11 +11,11 @@ import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -28,7 +28,7 @@ class FilmStorageDBTest {
     public void getFilmByIdShouldSuccessfullyCreateAndGetFilmTest() {
         final Film film = new Film(1, "first", "first description",
                 LocalDate.now().minusYears(8), 90L,
-                new Mpa(1, "o", "o"), new ArrayList<>(), new ArrayList<>());
+                new Mpa(1, "o", "o"), new LinkedHashSet<>(), new ArrayList<>());
         filmStorage.create(film);
 
         final Film dbFilm = filmStorage.getFilmById(1);
@@ -38,12 +38,12 @@ class FilmStorageDBTest {
 
     @Test
     void getAllFilmsShouldSuccessfullyCreateAndFindTwoFilmsTest() {
-        final Film first = new Film(1, "first", "first description",
+        final Film first = new Film(2, "first", "first description",
                 LocalDate.now().minusYears(8), 90L,
-                new Mpa(1, "o", "o"), new ArrayList<>(), new ArrayList<>());
-        Film second = new Film(2, "second", "second description",
+                new Mpa(1, "o", "o"), new LinkedHashSet<>(), new ArrayList<>());
+        Film second = new Film(3, "second", "second description",
                 LocalDate.now().minusYears(15), 100L,
-                new Mpa(3, "o", "o"), new ArrayList<>(), new ArrayList<>());
+                new Mpa(3, "o", "o"), new LinkedHashSet<>(), new ArrayList<>());
         List<Film> filmsBeforeSave = filmStorage.findAll();
         filmStorage.create(first);
         filmStorage.create(second);
@@ -55,9 +55,9 @@ class FilmStorageDBTest {
 
     @Test
     void updateFilmShouldSuccessfullyCreateChangeNameAndUpdateFilmTest() {
-        final Film first = new Film(1, "first", "first description",
+        final Film first = new Film(4, "first", "first description",
                 LocalDate.now().minusYears(8), 90L,
-                new Mpa(1, "o", "o"), new ArrayList<>(), new ArrayList<>());
+                new Mpa(1, "o", "o"), new LinkedHashSet<>(), new ArrayList<>());
         final Film added = filmStorage.create(first);
         added.setName("update");
         filmStorage.update(added);
@@ -69,12 +69,12 @@ class FilmStorageDBTest {
 
     @Test
     void deleteFilmShouldSuccessfullyCreateTwoFilmsAndDeleteOneTest() {
-        final Film first = new Film(1, "first", "first description",
+        final Film first = new Film(5, "first", "first description",
                 LocalDate.now().minusYears(8), 90L,
-                new Mpa(1, "o", "o"), new ArrayList<>(), new ArrayList<>());
-        final Film second = new Film(0, "second", "second description",
+                new Mpa(1, "o", "o"), new LinkedHashSet<>(), new ArrayList<>());
+        final Film second = new Film(6, "second", "second description",
                 LocalDate.now().minusYears(15), 100L,
-                new Mpa(3, "o", "o"), new ArrayList<>(), new ArrayList<>());
+                new Mpa(3, "o", "o"), new LinkedHashSet<>(), new ArrayList<>());
         final Film addedFirst = filmStorage.create(first);
         filmStorage.create(second);
 
@@ -87,13 +87,13 @@ class FilmStorageDBTest {
     }
 
     @Test
-    void compareFilmsAfterSaveShouldUnSuccessfullyCreateAndCompareTwoFilmsTest() {
-        final Film first = new Film(0, "first", "first description",
+    void compareFilmsAfterSaveShouldSuccessfullyCreateAndCompareTwoFilmsTest() {
+        final Film first = new Film(7, "first", "first description",
                 LocalDate.now().minusYears(8), 90L,
-                new Mpa(1, "o", "o"), new ArrayList<>(), new ArrayList<>());
+                new Mpa(1, "o", "o"), new LinkedHashSet<>(), new ArrayList<>());
         final Film afterSave = filmStorage.create(first);
 
-        assertNotEquals(first, afterSave, "Фильмы равны");
+        assertEquals(first, afterSave, "Фильмы не равны");
     }
 }
 

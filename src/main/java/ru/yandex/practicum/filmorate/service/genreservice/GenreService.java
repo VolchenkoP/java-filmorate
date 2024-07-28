@@ -2,16 +2,16 @@ package ru.yandex.practicum.filmorate.service.genreservice;
 
 import ru.yandex.practicum.filmorate.model.Genre;
 
-import java.util.List;
+import java.util.Set;
 
 public interface GenreService {
-    List<Genre> getAllGenres();
+    Set<Genre> getAllGenres();
 
-    List<Genre> getFilmGenres(int filmId);
+    Set<Genre> getFilmGenres(int filmId);
 
     Genre getGenre(int genreId);
 
     void deleteFilmGenres(int filmId);
 
-    void addFilmGenres(int filmId, List<Genre> genres);
+    void addFilmGenres(int filmId, Set<Genre> genres);
 }

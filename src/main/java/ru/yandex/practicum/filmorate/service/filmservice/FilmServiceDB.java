@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import ru.yandex.practicum.filmorate.exceptions.FilmValidationException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -22,15 +21,10 @@ import java.util.Set;
 @AllArgsConstructor
 @Primary
 public class FilmServiceDB implements FilmService {
-    private static int increment = 0;
 
     private final Validator validator;
 
     private final FilmStorage filmStorage;
-
-    private static int getNextId() {
-        return ++increment;
-    }
 
     @Override
     public List<Film> findAllFilms() {
@@ -82,12 +76,8 @@ public class FilmServiceDB implements FilmService {
             for (ConstraintViolation<Film> filmConstraintViolation : violations) {
                 messageBuilder.append(filmConstraintViolation.getMessage());
             }
-            throw new FilmValidationException("Ошибка валидации Фильма: " + messageBuilder, violations);
+            throw new ValidationException("Ошибка валидации Фильма: " + messageBuilder, violations);
         }
-        if (film.getId() == 0) {
-            film.setId(getNextId());
-        }
-
     }
 
 }

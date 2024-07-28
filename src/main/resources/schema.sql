@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS Users (
     login varchar(50) NOT NULL,
     name varchar(200) NOT NULL,
     birthday date NOT NULL,
-    CONSTRAINT uc_User_email UNIQUE (email)
+    CONSTRAINT uc_User_email UNIQUE (email),
+    CONSTRAINT uc_User_login UNIQUE (login)
 );
 
 CREATE TABLE IF NOT EXISTS Friendship (
@@ -56,6 +57,8 @@ ALTER TABLE Likes ADD CONSTRAINT IF NOT EXISTS fk_Like_user_id FOREIGN KEY(user_
 
 ALTER TABLE Likes ADD CONSTRAINT IF NOT EXISTS fk_Like_film_id FOREIGN KEY(film_id)
     REFERENCES Film (film_id) ON DELETE CASCADE;
+
+ALTER TABLE Likes ADD CONSTRAINT IF NOT EXISTS UC_Likes_user_id_film_id UNIQUE (user_id, film_id);
 
 ALTER TABLE Friendship ADD CONSTRAINT IF NOT EXISTS fk_Friendship_user_id FOREIGN KEY(user_id)
     REFERENCES Users (user_id);

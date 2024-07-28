@@ -3,10 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.filmservice.FilmService;
 
@@ -40,17 +37,9 @@ public class FilmController {
     @PostMapping
     public Film create(@RequestBody Film film) {
         log.info("Получен запрос POST. Данные тела запроса: {}", film);
-        try {
-            Film validFilm = filmService.createFilm(film);
-            log.info("Создан объект {} с идентификатором {}", Film.class.getSimpleName(), validFilm.getId());
-            return validFilm;
-        } catch (DataIntegrityViolationException e) {
-            log.error("Ошибка при создании фильма: {}", e.getMessage());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        } catch (Exception e) {
-            log.error("Непредвиденная ошибка при создании фильма: {}", e.getMessage());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Непредвиденная ошибка при создании фильма", e);
-        }
+        Film validFilm = filmService.createFilm(film);
+        log.info("Создан объект {} с идентификатором {}", Film.class.getSimpleName(), validFilm.getId());
+        return validFilm;
     }
 
     @PutMapping

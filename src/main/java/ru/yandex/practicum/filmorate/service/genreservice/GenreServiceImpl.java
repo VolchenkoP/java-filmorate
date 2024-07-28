@@ -9,7 +9,7 @@ import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
 
-import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -18,12 +18,12 @@ public class GenreServiceImpl implements GenreService {
     private final GenreStorage genreStorage;
 
     @Override
-    public List<Genre> getAllGenres() {
+    public Set<Genre> getAllGenres() {
         return genreStorage.getAllGenres();
     }
 
     @Override
-    public List<Genre> getFilmGenres(int filmId) {
+    public Set<Genre> getFilmGenres(int filmId) {
         return genreStorage.getGenresByFilmId(filmId);
     }
 
@@ -47,7 +47,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public void addFilmGenres(int filmId, List<Genre> genres) {
+    public void addFilmGenres(int filmId, Set<Genre> genres) {
         genreStorage.addFilmGenres(filmId, genres);
     }
 

@@ -1,10 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,11 +19,15 @@ public class User {
     private int id;
     @NotBlank
     @Email
+    @Size(max = 200)
     private String email;
     @NotBlank
+    @Size(max = 50)
     @Pattern(regexp = "^\\S*$", message = "Логин не может содержать пробелы")
     private String login;
+    @Size(max = 200)
     private String name;
+    @NotNull
     @PastOrPresent
     private LocalDate birthday;
     private List<Integer> friends;

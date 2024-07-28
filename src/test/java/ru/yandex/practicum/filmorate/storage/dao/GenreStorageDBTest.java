@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
 
-import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,7 +29,7 @@ public class GenreStorageDBTest {
 
     @Test
     void getAllGenresShouldSuccessfullyGetAllGenresFromDBTest() {
-        final List<Genre> genres = genreStorage.getAllGenres();
+        final Set<Genre> genres = genreStorage.getAllGenres();
         assertEquals(6, genres.size());
     }
 

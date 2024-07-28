@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.storage.dao;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -11,8 +10,8 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.service.genreservice.GenreService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.LikeStorage;
 
 import java.sql.*;
@@ -26,7 +25,7 @@ import java.util.Objects;
 public class FilmStorageDB implements FilmStorage {
 
     private final JdbcTemplate jdbcTemplate;
-    private final GenreService genreService;
+    private final GenreStorage genreStorage;
     private final LikeStorage likeStorage;
 
     @Override
@@ -35,14 +34,14 @@ public class FilmStorageDB implements FilmStorage {
         String sqlFilm = "select * from Film as f"
                 + " INNER JOIN RatingMPA as r on f.rating_id = r.rating_id"
                 + " where f.film_id = ?";
-        Film film;
-        try {
-            film = jdbcTemplate.queryForObject(sqlFilm, (rs, rowNum) -> makeFilm(rs), filmId);
-        } catch (EmptyResultDataAccessException e) {
+        Film film = jdbcTemplate.queryForObject(sqlFilm, (rs, rowNum) -> makeFilm(rs), filmId);
+        if (film == null) {
+            log.error("Фильм с id: {} не зарегистрирован", filmId);
             throw new NotFoundException("Фильм с идентификатором " + filmId + " не зарегистрирован!");
+        } else {
+            log.info("Найден фильм: {} {}", film.getId(), film.getName());
+            return film;
         }
-        log.info("Найден фильм: {} {}", film.getId(), film.getName());
-        return film;
     }
 
     @Override
@@ -69,15 +68,12 @@ public class FilmStorageDB implements FilmStorage {
         }, keyHolder);
 
         int id = Objects.requireNonNull(keyHolder.getKey()).intValue();
-
+        film.setId(id);
         if (!film.getGenres().isEmpty()) {
-            genreService.addFilmGenres(film.getId(), film.getGenres());
+            genreStorage.addFilmGenres(film.getId(), film.getGenres());
         }
-
         if (film.getLikes() != null && !film.getLikes().isEmpty()) {
-            for (Integer userId : film.getLikes()) {
-                likeStorage.addLike(film.getId(), userId);
-            }
+            likeStorage.setLikes(film);
         }
         return getFilmById(id);
     }
@@ -90,15 +86,12 @@ public class FilmStorageDB implements FilmStorage {
         jdbcTemplate.update(sqlQuery, film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration(),
                 film.getMpa().getId(), film.getId());
 
-        genreService.deleteFilmGenres(film.getId());
+        genreStorage.deleteFilmGenres(film.getId());
         if (!film.getGenres().isEmpty()) {
-            genreService.addFilmGenres(film.getId(), film.getGenres());
+            genreStorage.addFilmGenres(film.getId(), film.getGenres());
         }
-
         if (film.getLikes() != null && !film.getLikes().isEmpty()) {
-            for (Integer userId : film.getLikes()) {
-                likeStorage.addLike(film.getId(), userId);
-            }
+            likeStorage.setLikes(film);
         }
         return getFilmById(film.getId());
     }
@@ -131,7 +124,7 @@ public class FilmStorageDB implements FilmStorage {
                 new Mpa(resultSet.getInt("RatingMPA.rating_id"),
                         resultSet.getString("RatingMPA.name"),
                         resultSet.getString("RatingMPA.description")),
-                genreService.getFilmGenres(filmId), getFilmLikes(filmId));
+                genreStorage.getGenresByFilmId(filmId), getFilmLikes(filmId));
     }
 
     private List<Integer> getFilmLikes(int filmId) {

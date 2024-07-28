@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void userValidation(User user) {
-        if (user.getName() == null || user.getName().isBlank()) {
+        if (user.getName() == null || user.getName().isBlank() || user.getName().isEmpty()) {
             user.setName(user.getLogin());
         }
         if (storage.getAllUsers().stream().anyMatch(x -> x.getEmail().equals(user.getEmail()) &&

@@ -1,16 +1,13 @@
 package ru.yandex.practicum.filmorate.service.userservice;
 
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ValidationException;
 import jakarta.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
-import ru.yandex.practicum.filmorate.exceptions.UserValidationException;
+import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -26,7 +23,6 @@ public class UserServiceDB implements UserService {
     private int increment;
 
     public UserServiceDB(Validator validator, @Qualifier("UserStorageDB") UserStorage userStorage) {
-        this.increment = 0;
         this.validator = validator;
         this.userStorage = userStorage;
     }
@@ -49,12 +45,9 @@ public class UserServiceDB implements UserService {
             validate(user);
             return userStorage.update(user);
         } catch (ValidationException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка валидации пользователя", e);
+            throw new ValidationException("Ошибка при обновлении Юзера c  id: " + user.getId());
         } catch (NotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден", e);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Неизвестная ошибка при обновлении пользователя", e);
+            throw new NotFoundException("Пользователь не найден при обновлении");
         }
     }
 
@@ -64,13 +57,9 @@ public class UserServiceDB implements UserService {
     }
 
     private void validate(final User user) {
-        if (user.getName() == null) {
+        if (user.getName() == null || user.getName().isEmpty() || user.getName().isBlank()) {
             user.setName(user.getLogin());
-            log.info("Поле name не задано. Установлено значение {} из поля login", user.getLogin());
-        } else if (user.getName().isEmpty() || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-            log.info(
-                    "Поле name не содержит буквенных символов. " + "Установлено значение {} из поля login",
+            log.info("Поле name не содержит буквенных символов. Установлено значение {} из поля login",
                     user.getLogin());
         }
         Set<ConstraintViolation<User>> violations = validator.validate(user);
@@ -79,18 +68,14 @@ public class UserServiceDB implements UserService {
             for (ConstraintViolation<User> userConstraintViolation : violations) {
                 messageBuilder.append(userConstraintViolation.getMessage());
             }
-            throw new UserValidationException("Ошибка валидации Пользователя: " + messageBuilder, violations);
-        }
-        if (user.getId() == 0) {
-            user.setId(++increment);
+            throw new ValidationException("Ошибка валидации Фильма: " + messageBuilder, violations);
         }
     }
 
     @Override
     public User getStoredUser(int userId) {
         if (userId == Integer.MIN_VALUE) {
-            throw new ru.yandex.practicum.filmorate.exceptions.ValidationException("Не удалось распознать идентификатор " +
-                    "пользователя: " + "значение " + userId);
+            throw new ValidationException("Не удалось распознать идентификатор пользователя: значение " + userId);
         }
         User user = userStorage.getUserById(userId);
         if (user == null) {

@@ -8,9 +8,7 @@ import lombok.NoArgsConstructor;
 import ru.yandex.practicum.filmorate.controller.validators.FilmValidator.ReleaseDate;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Film.
@@ -22,17 +20,20 @@ import java.util.Objects;
 public class Film {
     @PositiveOrZero
     private int id;
+    @Size(max = 200)
     @NotBlank
     private String name;
     @Size(max = 200)
+    @NotBlank
     private String description;
     @ReleaseDate
     private LocalDate releaseDate;
     @Positive
+    @NotNull
     private Long duration;
     @NotNull
     private Mpa mpa;
-    private List<Genre> genres = new ArrayList<>();
+    private Set<Genre> genres = new LinkedHashSet<>();
     private List<Integer> likes = new ArrayList<>();
 
     public boolean addLike(Integer userId) {
