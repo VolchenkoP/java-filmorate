@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.controller;
+package ru.yandex.practicum.filmorate.inMemory.controller;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -8,13 +8,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.userservice.UserServiceImpl;
-import ru.yandex.practicum.filmorate.storage.userstorage.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.storage.userstorage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.memorystorage.InMemoryUserStorage;
 
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -34,8 +35,8 @@ class UserControllerTest {
 
     User defaultUser() {
         User user = User.builder()
-                .id(null)
-                .friends(new HashSet<>())
+                .id(0)
+                .friends(new ArrayList<>())
                 .name("defaultUser")
                 .email("default@ya.ru")
                 .login("defaultLogin")
@@ -62,8 +63,8 @@ class UserControllerTest {
 
         final User userForUpdate = defaultUser();
         userForUpdate.setName("CheckUpdateName");
-        userForUpdate.setId(1L);
-        userController.update(userForUpdate);
+        userForUpdate.setId(1);
+        userController.put(userForUpdate);
 
         assertEquals(userForUpdate.getName(), userController.findAll().getFirst().getName());
     }

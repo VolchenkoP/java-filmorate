@@ -1,24 +1,27 @@
 package ru.yandex.practicum.filmorate.model;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.yandex.practicum.filmorate.controller.validators.FilmValidator.ReleaseDate;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Film.
  */
 @Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Film {
-    private Long id;
-    private Set<Long> likes;
+    @PositiveOrZero
+    private int id;
     @NotBlank
     private String name;
     @Size(max = 200)
@@ -27,7 +30,32 @@ public class Film {
     private LocalDate releaseDate;
     @Positive
     private Long duration;
-    private HashSet<Genre> genres;
-    private Rating rating;
+    @NotNull
+    private Mpa mpa;
+    private List<Genre> genres = new ArrayList<>();
+    private List<Integer> likes = new ArrayList<>();
+
+    public boolean addLike(Integer userId) {
+        return likes.add(userId);
+    }
+
+    public boolean deleteLike(Integer userId) {
+        return likes.remove(userId);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof Film))
+            return false;
+        Film film = (Film) o;
+        return getId() == film.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
 
 }

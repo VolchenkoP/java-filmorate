@@ -15,4 +15,7 @@ public interface FilmService {
 
     List<Film> getPopularFilms(int count);
 
+    Film getFilmById(int filmId);
+
+    Film getStoredFilm(int filmId);
 }

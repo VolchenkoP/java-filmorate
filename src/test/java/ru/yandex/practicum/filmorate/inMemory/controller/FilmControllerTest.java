@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.controller;
+package ru.yandex.practicum.filmorate.inMemory.controller;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -8,13 +8,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.filmservice.FilmServiceImpl;
-import ru.yandex.practicum.filmorate.storage.filmstorage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.filmstorage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.memorystorage.InMemoryFilmStorage;
 
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -34,8 +35,8 @@ class FilmControllerTest {
 
     Film defaultFilm() {
         Film film = Film.builder()
-                .id(null)
-                .likes(new HashSet<>())
+                .id(1)
+                .likes(new ArrayList<>())
                 .name("Default")
                 .description("Desc")
                 .releaseDate(LocalDate.of(2000, 1, 1))
@@ -59,7 +60,7 @@ class FilmControllerTest {
 
         final Film filmForUpdate = defaultFilm();
         filmForUpdate.setName("CheckUpdateName");
-        filmForUpdate.setId(1L);
+        filmForUpdate.setId(1);
         controller.update(filmForUpdate);
 
         assertEquals(filmForUpdate.getName(), controller.findAll().getFirst().getName());

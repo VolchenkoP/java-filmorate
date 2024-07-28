@@ -1,20 +1,24 @@
-package ru.yandex.practicum.filmorate.storage.userstorage;
+package ru.yandex.practicum.filmorate.storage.memorystorage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Component
 public class InMemoryUserStorage implements UserStorage {
-    private final Map<Long, User> users = new HashMap<>();
+    private final Map<Integer, User> users = new HashMap<>();
 
     @Override
-    public List<User> findAll() {
+    public List<User> getAllUsers() {
         return new ArrayList<>(users.values());
     }
 
@@ -22,7 +26,7 @@ public class InMemoryUserStorage implements UserStorage {
     public User create(User user) {
         try {
             user.setId(getNextId());
-            user.setFriends(new HashSet<>());
+            user.setFriends(new ArrayList<>());
             users.put(user.getId(), user);
             log.info("User создан с Id: {}", user.getId());
             return user;
@@ -45,7 +49,18 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User getUserById(Long id) {
+    public boolean delete(User user) {
+        if (users.containsKey(user.getId())) {
+            users.remove(user.getId());
+            return true;
+        } else {
+            log.error("Ошибка при удалении юзера с id: {}", user.getId());
+            throw new NotFoundException("User с id: " + user.getId() + " не найден");
+        }
+    }
+
+    @Override
+    public User getUserById(Integer id) {
         if (users.containsKey(id)) {
             return users.get(id);
         } else {
@@ -54,10 +69,10 @@ public class InMemoryUserStorage implements UserStorage {
         }
     }
 
-    private long getNextId() {
-        long currentId = users.keySet()
+    private int getNextId() {
+        int currentId = users.keySet()
                 .stream()
-                .mapToLong(id -> id)
+                .mapToInt(id -> id)
                 .max()
                 .orElse(0);
         return ++currentId;
