@@ -59,11 +59,6 @@ public class UserStorageDB implements UserStorage {
         int id = Objects.requireNonNull(keyHolder.getKey()).intValue();
         user.setId(id);
 
-        if (user.getFriends() != null) {
-            for (Integer friendId : user.getFriends()) {
-                friendStorage.addToFriends(user.getId(), friendId);
-            }
-        }
         return getUserById(id);
     }
 
@@ -82,18 +77,24 @@ public class UserStorageDB implements UserStorage {
         return jdbcTemplate.update(sqlQuery, user.getId()) > 0;
     }
 
-    private User makeUser(ResultSet resultSet) throws SQLException {
+    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+        User user = new User();
+        user.setId(rs.getInt("user_id"));
+        user.setEmail(rs.getString("email"));
+        user.setLogin(rs.getString("login"));
+        user.setName(rs.getString("name"));
+        user.setBirthday(rs.getDate("birthday").toLocalDate()); // Предполагается, что дата рождения хранится как Date
+        // Добавьте здесь другие поля, если они есть в вашей модели User
+        return user;
+    }
+
+    @Override
+    public User makeUser(ResultSet resultSet) throws SQLException {
         int userId = resultSet.getInt("user_id");
         return new User(userId, resultSet.getString("email"),
                 resultSet.getString("login"),
                 resultSet.getString("name"),
-                Objects.requireNonNull(resultSet.getDate("birthday")).toLocalDate(),
-                getUserFriends(userId));
-    }
-
-    private List<Integer> getUserFriends(int userId) {
-        String sqlGetFriends = "select friend_id from Friendship where user_id = ?";
-        return jdbcTemplate.queryForList(sqlGetFriends, Integer.class, userId);
+                Objects.requireNonNull(resultSet.getDate("birthday")).toLocalDate());
     }
 
 }

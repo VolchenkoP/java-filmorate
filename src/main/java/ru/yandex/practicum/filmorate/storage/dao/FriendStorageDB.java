@@ -3,11 +3,13 @@ package ru.yandex.practicum.filmorate.storage.dao;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FriendStorage;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 @AllArgsConstructor
@@ -16,33 +18,41 @@ public class FriendStorageDB implements FriendStorage {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<Integer> findAllFriendsId(int userId) {
-        String sqlGetFriends = "select friend_id from Friendship where user_id = ?";
-        return jdbcTemplate.queryForList(sqlGetFriends, Integer.class, userId);
-        // переделать под юзеров
+    public Set<User> findAllFriends(int userId) {
+        List<User> users = jdbcTemplate.query("SELECT * FROM Users u JOIN Friendship f ON u.user_id = f.friend_id "
+                        + "WHERE f.user_id = ?", (rs, rowNum) ->
+                        new User(rs.getInt("user_id"),
+                                rs.getString("email"),
+                                rs.getString("login"),
+                                rs.getString("name"),
+                                rs.getDate("birthday").toLocalDate()),
+                userId);
+        return new HashSet<>(users);
     }
 
     @Override
-    public boolean addToFriends(int userId, int friendId) {
-        boolean friendAccepted;
-        String sqlGetReversFriend = "select * from Friendship where user_id = ? and friend_id = ?";
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sqlGetReversFriend, friendId, userId);
-        friendAccepted = sqlRowSet.next();
-        String sqlSetFriend = "insert into Friendship (user_id, friend_id, status) VALUES (?,?,?)";
-        jdbcTemplate.update(sqlSetFriend, userId, friendId, friendAccepted);
-        if (friendAccepted) {
-            String sqlSetStatus = "update Friendship set status = true where user_id = ? and friend_id = ?";
-            jdbcTemplate.update(sqlSetStatus, friendId, userId);
-        }
-        return true;
+    public Set<User> getAllCommonFriends(int userId, int otherUserId) {
+        List<User> users = jdbcTemplate.query("SELECT DISTINCT u.* FROM Users u JOIN Friendship f "
+                        + "ON u.user_id = f.friend_id WHERE f.user_id = ? AND u.user_id "
+                        + "IN (SELECT f.friend_id FROM Friendship f WHERE f.user_id = ?)",
+                (rs, rowNum) -> new User(rs.getInt("user_id"),
+                        rs.getString("email"),
+                        rs.getString("login"),
+                        rs.getString("name"),
+                        rs.getDate("birthday").toLocalDate()),
+                userId, otherUserId);
+        return new HashSet<>(users);
     }
 
     @Override
-    public boolean deleteFromFriends(int userId, int friendId) {
-        String sqlDeleteFriend = "delete from Friendship where user_id = ? and friend_id = ?";
-        jdbcTemplate.update(sqlDeleteFriend, userId, friendId);
-        String sqlSetStatus = "update Friendship set status = false where user_id = ? and friend_id = ?";
-        jdbcTemplate.update(sqlSetStatus, friendId, userId);
-        return true;
+    public void addToFriends(int userId, int friendId) {
+        jdbcTemplate.update("INSERT INTO Friendship (user_id, friend_id, status) "
+                + "VALUES (?, ?, true)", userId, friendId);
+    }
+
+
+    @Override
+    public void deleteFromFriends(int userId, int friendId) {
+        jdbcTemplate.update("DELETE FROM Friendship WHERE user_id = ? AND friend_id = ?", userId, friendId);
     }
 }

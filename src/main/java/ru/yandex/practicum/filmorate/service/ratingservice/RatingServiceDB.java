@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class RatingServiceImpl implements RatingService {
+public class RatingServiceDB implements RatingService {
     private final RatingStorage ratingStorage;
 
     @Override

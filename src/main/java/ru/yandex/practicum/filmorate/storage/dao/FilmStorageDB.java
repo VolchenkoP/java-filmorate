@@ -26,7 +26,6 @@ public class FilmStorageDB implements FilmStorage {
 
     private final JdbcTemplate jdbcTemplate;
     private final GenreStorage genreStorage;
-    private final LikeStorage likeStorage;
 
     @Override
     public Film getFilmById(int filmId) {
@@ -72,26 +71,18 @@ public class FilmStorageDB implements FilmStorage {
         if (!film.getGenres().isEmpty()) {
             genreStorage.addFilmGenres(film.getId(), film.getGenres());
         }
-        if (film.getLikes() != null && !film.getLikes().isEmpty()) {
-            likeStorage.setLikes(film);
-        }
         return getFilmById(id);
     }
 
     @Override
     public Film update(Film film) {
-        String sqlQuery = "update Film"
-                + " set name = ?, description = ?, releaseDate = ?, duration = ?, rating_id = ?"
-                + " where film_id = ?";
+        String sqlQuery = "UPDATE Film SET name = ?, description = ?, releaseDate = ?, duration = ?, rating_id = ? " +
+                "WHERE film_id = ?";
         jdbcTemplate.update(sqlQuery, film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration(),
                 film.getMpa().getId(), film.getId());
-
         genreStorage.deleteFilmGenres(film.getId());
         if (!film.getGenres().isEmpty()) {
             genreStorage.addFilmGenres(film.getId(), film.getGenres());
-        }
-        if (film.getLikes() != null && !film.getLikes().isEmpty()) {
-            likeStorage.setLikes(film);
         }
         return getFilmById(film.getId());
     }
@@ -124,11 +115,7 @@ public class FilmStorageDB implements FilmStorage {
                 new Mpa(resultSet.getInt("RatingMPA.rating_id"),
                         resultSet.getString("RatingMPA.name"),
                         resultSet.getString("RatingMPA.description")),
-                genreStorage.getGenresByFilmId(filmId), getFilmLikes(filmId));
+                genreStorage.getGenresByFilmId(filmId));
     }
 
-    private List<Integer> getFilmLikes(int filmId) {
-        String sqlGetLikes = "select user_id from Likes where film_id = ?";
-        return jdbcTemplate.queryForList(sqlGetLikes, Integer.class, filmId);
-    }
 }

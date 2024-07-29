@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -28,7 +27,7 @@ class FilmStorageDBTest {
     public void getFilmByIdShouldSuccessfullyCreateAndGetFilmTest() {
         final Film film = new Film(1, "first", "first description",
                 LocalDate.now().minusYears(8), 90L,
-                new Mpa(1, "o", "o"), new LinkedHashSet<>(), new ArrayList<>());
+                new Mpa(1, "o", "o"), new LinkedHashSet<>());
         filmStorage.create(film);
 
         final Film dbFilm = filmStorage.getFilmById(1);
@@ -40,10 +39,10 @@ class FilmStorageDBTest {
     void getAllFilmsShouldSuccessfullyCreateAndFindTwoFilmsTest() {
         final Film first = new Film(2, "first", "first description",
                 LocalDate.now().minusYears(8), 90L,
-                new Mpa(1, "o", "o"), new LinkedHashSet<>(), new ArrayList<>());
+                new Mpa(1, "o", "o"), new LinkedHashSet<>());
         Film second = new Film(3, "second", "second description",
                 LocalDate.now().minusYears(15), 100L,
-                new Mpa(3, "o", "o"), new LinkedHashSet<>(), new ArrayList<>());
+                new Mpa(3, "o", "o"), new LinkedHashSet<>());
         List<Film> filmsBeforeSave = filmStorage.findAll();
         filmStorage.create(first);
         filmStorage.create(second);
@@ -57,7 +56,7 @@ class FilmStorageDBTest {
     void updateFilmShouldSuccessfullyCreateChangeNameAndUpdateFilmTest() {
         final Film first = new Film(4, "first", "first description",
                 LocalDate.now().minusYears(8), 90L,
-                new Mpa(1, "o", "o"), new LinkedHashSet<>(), new ArrayList<>());
+                new Mpa(1, "o", "o"), new LinkedHashSet<>());
         final Film added = filmStorage.create(first);
         added.setName("update");
         filmStorage.update(added);
@@ -71,10 +70,10 @@ class FilmStorageDBTest {
     void deleteFilmShouldSuccessfullyCreateTwoFilmsAndDeleteOneTest() {
         final Film first = new Film(5, "first", "first description",
                 LocalDate.now().minusYears(8), 90L,
-                new Mpa(1, "o", "o"), new LinkedHashSet<>(), new ArrayList<>());
+                new Mpa(1, "o", "o"), new LinkedHashSet<>());
         final Film second = new Film(6, "second", "second description",
                 LocalDate.now().minusYears(15), 100L,
-                new Mpa(3, "o", "o"), new LinkedHashSet<>(), new ArrayList<>());
+                new Mpa(3, "o", "o"), new LinkedHashSet<>());
         final Film addedFirst = filmStorage.create(first);
         filmStorage.create(second);
 
@@ -90,7 +89,7 @@ class FilmStorageDBTest {
     void compareFilmsAfterSaveShouldSuccessfullyCreateAndCompareTwoFilmsTest() {
         final Film first = new Film(7, "first", "first description",
                 LocalDate.now().minusYears(8), 90L,
-                new Mpa(1, "o", "o"), new LinkedHashSet<>(), new ArrayList<>());
+                new Mpa(1, "o", "o"), new LinkedHashSet<>());
         final Film afterSave = filmStorage.create(first);
 
         assertEquals(first, afterSave, "Фильмы не равны");

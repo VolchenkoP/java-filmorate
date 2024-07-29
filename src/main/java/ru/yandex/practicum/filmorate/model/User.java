@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Objects;
 
 @Builder
@@ -30,15 +29,7 @@ public class User {
     @NotNull
     @PastOrPresent
     private LocalDate birthday;
-    private List<Integer> friends;
 
-    public boolean addFriend(Integer id) {
-        return friends.add(id);
-    }
-
-    public boolean removeFriend(Integer id) {
-        return friends.remove(id);
-    }
 
     @Override
     public boolean equals(Object o) {

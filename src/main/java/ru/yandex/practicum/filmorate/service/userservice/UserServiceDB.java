@@ -20,7 +20,6 @@ import java.util.Set;
 public class UserServiceDB implements UserService {
     private final Validator validator;
     private final UserStorage userStorage;
-    private int increment;
 
     public UserServiceDB(Validator validator, @Qualifier("UserStorageDB") UserStorage userStorage) {
         this.validator = validator;

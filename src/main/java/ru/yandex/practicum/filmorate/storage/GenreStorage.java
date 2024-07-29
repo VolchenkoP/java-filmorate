@@ -6,9 +6,9 @@ import java.util.Set;
 
 public interface GenreStorage {
 
-    boolean addFilmGenres(int filmId, Set<Genre> genres);
+    void addFilmGenres(int filmId, Set<Genre> genres);
 
-    boolean deleteFilmGenres(int filmId);
+    void deleteFilmGenres(int filmId);
 
     Set<Genre> getGenresByFilmId(int filmId);
 

@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,8 +25,7 @@ public class UserStorageDBTest {
     @Test
     public void getUserByIdShouldSuccessfullyCreateAndGetUSerTest() {
         final User user = new User(1, "correct.email@mail.ru", "correct_login1", "Correct Name",
-                LocalDate.of(2002, 1, 1),
-                new ArrayList<>());
+                LocalDate.of(2002, 1, 1));
         userStorage.create(user);
 
         final User user2 = userStorage.getUserById(1);
@@ -38,11 +36,9 @@ public class UserStorageDBTest {
     @Test
     void getAllUsersShouldSuccessfullyCreateAndFindTwoUsersTest() {
         final User first = new User(2, "cor.email@mail.ru", "correct_login2", "Correct Name",
-                LocalDate.of(2002, 1, 1),
-                new ArrayList<>());
+                LocalDate.of(2002, 1, 1));
         final User second = new User(3, "corre.email@mail.ru", "correct_login3", "Correct Name",
-                LocalDate.of(2002, 1, 1),
-                new ArrayList<>());
+                LocalDate.of(2002, 1, 1));
         final List<User> usersBeforeSave = userStorage.getAllUsers();
         userStorage.create(first);
         userStorage.create(second);
@@ -55,8 +51,7 @@ public class UserStorageDBTest {
     @Test
     void updateUSerShouldSuccessfullyCreateChangeNameAndUpdateUserTest() {
         final User userTest = new User(4, "correc.email@mail.ru", "correct_login4", "Correct Name",
-                LocalDate.of(2002, 1, 1),
-                new ArrayList<>());
+                LocalDate.of(2002, 1, 1));
         final User added = userStorage.create(userTest);
         added.setName("update");
         userStorage.update(added);
@@ -69,11 +64,9 @@ public class UserStorageDBTest {
     @Test
     void deleteUserShouldSuccessfullyCreateTwoUserAndDeleteOneTest() {
         final User first = new User(5, "cor2.email@mail.ru", "correct_login5", "Correct Name",
-                LocalDate.of(2002, 1, 1),
-                new ArrayList<>());
+                LocalDate.of(2002, 1, 1));
         final User second = new User(6, "corre3.email@mail.ru", "correct_login6", "Correct Name",
-                LocalDate.of(2002, 1, 1),
-                new ArrayList<>());
+                LocalDate.of(2002, 1, 1));
         final User addedFirst = userStorage.create(first);
         userStorage.create(second);
 
@@ -88,8 +81,7 @@ public class UserStorageDBTest {
     @Test
     void compareUsersAfterSaveShouldSuccessfullyCreateAndCompareTwoUsersTest() {
         final User testUser = new User(7, "corre30.email@mail.ru", "correct_login7", "Correct Name",
-                LocalDate.of(2002, 1, 1),
-                new ArrayList<>());
+                LocalDate.of(2002, 1, 1));
         final User afterSave = userStorage.create(testUser);
 
         assertEquals(testUser, afterSave, "Юзеры не равны");
