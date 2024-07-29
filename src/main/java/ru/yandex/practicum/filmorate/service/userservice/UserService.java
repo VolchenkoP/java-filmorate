@@ -12,4 +12,7 @@ public interface UserService {
 
     List<User> findAllUsers();
 
+    User getUserById(int id);
+
+    User getStoredUser(int userId);
 }

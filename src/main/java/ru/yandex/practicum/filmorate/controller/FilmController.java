@@ -28,10 +28,18 @@ public class FilmController {
         return filmService.getPopularFilms(count);
     }
 
+    @GetMapping("/{id}")
+    public Film findFilm(@PathVariable Integer id) {
+        log.info("Получен запрос GET к эндпоинту: /films/{}", id);
+        return filmService.getFilmById(id);
+    }
+
     @PostMapping
-    public Film create(@Valid @RequestBody Film film) {
-        log.info("Добавление нового фильма");
-        return filmService.createFilm(film);
+    public Film create(@RequestBody Film film) {
+        log.info("Получен запрос POST. Данные тела запроса: {}", film);
+        Film validFilm = filmService.createFilm(film);
+        log.info("Создан объект {} с идентификатором {}", Film.class.getSimpleName(), validFilm.getId());
+        return validFilm;
     }
 
     @PutMapping

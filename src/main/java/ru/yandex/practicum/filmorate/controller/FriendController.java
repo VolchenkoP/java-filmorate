@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.friendService.FriendService;
+import ru.yandex.practicum.filmorate.service.friendservice.FriendService;
 
-import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -16,30 +16,30 @@ public class FriendController {
     private final FriendService friendService;
 
     @GetMapping("/{id}/friends")
-    public List<User> findAllFriends(@PathVariable Long id) {
-        log.info("Получение списка всех друзей user с id {}", id);
+    public Set<User> findFriends(@PathVariable Integer id) {
+        log.info("Получен запрос GET к эндпоинту: /users/{}/friends", id);
         return friendService.findAllFriends(id);
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> getAllCommonFriends(@PathVariable Long id,
-                                          @PathVariable Long otherId) {
-        log.info("Получение списка всех общих друзей с user {}", id);
+    public Set<User> findCommonFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
+        log.info("Получен запрос GET к эндпоинту: /users/{}/friends/common/{}", id, otherId);
         return friendService.getAllCommonFriends(id, otherId);
     }
 
-    @PutMapping("/{userId}/friends/{friendId}")
-    public void addToFriends(@PathVariable Long userId,
-                             @PathVariable Long friendId) {
-        log.info("Добавление для user c Id {} нового друга с Id {}", userId, friendId);
-        friendService.addToFriends(userId, friendId);
+    @PutMapping("/{id}/friends/{friendId}")
+    public void addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+        log.info("Получен запрос PUT к эндпоинту: /users/{}/friends/{}", id, friendId);
+        friendService.addToFriends(id, friendId);
+        log.info("Обновлен объект {} с идентификатором {}. Добавлен друг {}", User.class.getSimpleName(), id,
+                friendId);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
-    public void deleteFromFriends(@PathVariable Long id,
-                                  @PathVariable Long friendId) {
-        log.info("Удаление для user c Id {} друга с Id {}", id, friendId);
+    public void deleteFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+        log.info("Получен запрос DELETE к эндпоинту: /users/{}/friends/{}", id, friendId);
         friendService.deleteFromFriends(id, friendId);
+        log.info("Обновлен объект {} с идентификатором {}. Удален друг {}", User.class.getSimpleName(), id, friendId);
     }
 
 }
