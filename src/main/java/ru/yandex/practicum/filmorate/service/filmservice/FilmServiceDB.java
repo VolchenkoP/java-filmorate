@@ -11,7 +11,6 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.genreservice.GenreService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.util.List;
